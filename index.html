@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Workflow Mastery - Professional Version Control Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0366d6;
+            --secondary: #28a745;
+            --danger: #d73a49;
+            --dark: #24292e;
+            --light: #f6f8fa;
+            --border: #e1e4e8;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.1;
+            background: url('data:image/svg+xml,%3Csvg width="60" height="60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #586069;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Workflow Container */
+        .workflow-container {
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .workflow-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workflow-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .workflow-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .workflow-card p {
+            color: #586069;
+            line-height: 1.8;
+        }
+
+        /* Code Section */
+        .code-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .code-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #ff5f57;
+            font-size: 12px;
+            letter-spacing: 5px;
+        }
+
+        .command {
+            color: #9cdcfe;
+            margin: 0.5rem 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .command::before {
+            content: '$';
+            position: absolute;
+            left: 0;
+            color: #6a9955;
+        }
+
+        .output {
+            color: #ce9178;
+            margin-left: 20px;
+            opacity: 0.9;
+        }
+
+        /* Branch Visualization */
+        .branch-visual {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .branch-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .branch {
+            text-align: center;
+            padding: 1rem 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .branch:hover {
+            transform: scale(1.05);
+        }
+
+        .branch-main {
+            background: var(--primary);
+            color: white;
+        }
+
+        .branch-feature {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .branch-line {
+            position: absolute;
+            height: 2px;
+            background: #ddd;
+            top: 50%;
+            z-index: 1;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Conflict Resolution */
+        .conflict-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .conflict-section h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 5%;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header>
+        <nav>
+            <div class="logo">
+                <span>🚀</span> Git Workflow Pro
+            </div>
+            <ul class="nav-links">
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#branches">Branches</a></li>
+                <li><a href="#commands">Commands</a></li>
+                <li><a href="#conflicts">Conflicts</a></li>
+                <li><a href="#deliverables">Deliverables</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Master Git Workflow</h1>
+        <p>Professional Version Control Management & Branching Strategy</p>
+        <div class="btn-group">
+            <a href="#workflow" class="btn">Get Started</a>
+            <a href="https://github.com" target="_blank" class="btn">View on GitHub</a>
+        </div>
+    </section>
+
+    <div class="workflow-container">
+        <section id="workflow">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">Daily Workflow Steps</h2>
+            
+            <div class="workflow-grid">
+                <div class="workflow-card">
+                    <span class="step-number">1</span>
+                    <h3>Create Repository</h3>
+                    <p>Initialize a new Git repository either locally or directly on GitHub. This serves as the foundation for your version control workflow.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">2</span>
+                    <h3>Initial Commit</h3>
+                    <p>Make your first commit in the main branch to establish the baseline of your project with initial HTML structure.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">3</span>
+                    <h3>Create Feature Branches</h3>
+                    <p>Branch out from main to create two separate feature branches for parallel development workflows.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">4</span>
+                    <h3>Update HTML Content</h3>
+                    <p>Make specific HTML content updates in each feature branch according to the scenario requirements.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">5</span>
+                    <h3>Merge Branches</h3>
+                    <p>Integrate both feature branches back into the main branch using proper merge strategies.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">6</span>
+                    <h3>Resolve Conflicts</h3>
+                    <p>Handle merge conflicts professionally when they occur, ensuring code integrity is maintained.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">7</span>
+                    <h3>Push to GitHub</h3>
+                    <p>Upload the complete repository to GitHub and generate a public repository link for sharing.</p>
+                </div>
+                
+                <div class="workflow-card">
+                    <span class="step-number">8</span>
+                    <h3>Document Everything</h3>
+                    <p>Capture screenshots of commands, outputs, and the final result for comprehensive documentation.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="branches" class="branch-visual">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">Branch Strategy Visualization</h2>
+            <div class="branch-diagram">
+                <div class="branch-line" style="width: 80%; left: 10%;"></div>
+                <div class="branch branch-main">
+                    <h3>Main Branch</h3>
+                    <p>Production Ready</p>
+                </div>
+                <div class="branch branch-feature">
+                    <h3>Feature-A</h3>
+                    <p>New Component</p>
+                </div>
+                <div class="branch branch-feature">
+                    <h3>Feature-B</h3>
+                    <p>UI Updates</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="commands" class="code-section">
+            <div class="code-header">
+                <h2 class="code-title">
+                    <span>⚡</span> Essential Git Commands
+                </h2>
+            </div>
+            <div class="terminal">
+                <div class="command">git init</div>
+                <div class="output">Initialized empty Git repository in .git/</div>
+                
+                <div class="command">git add .</div>
+                <div class="output">Files staged for commit</div>
+                
+                <div class="command">git commit -m "Initial commit"</div>
+                <div class="output">[main (root-commit) 1a2b3c4] Initial commit</div>
+                
+                <div class="command">git checkout -b feature-header</div>
+                <div class="output">Switched to a new branch 'feature-header'</div>
+                
+                <div class="command">git checkout -b feature-footer</div>
+                <div class="output">Switched to a new branch 'feature-footer'</div>
+                
+                <div class="command">git merge feature-header</div>
+                <div class="output">Merge made by the 'recursive' strategy.</div>
+                
+                <div class="command">git status</div>
+                <div class="output">On branch main - Your branch is up to date</div>
+                
+                <div class="command">git log --oneline --graph</div>
+                <div class="output">* 5d6e7f8 (HEAD -> main) Merge feature branches</div>
+                
+                <div class="command">git push origin main</div>
+                <div class="output">Enumerating objects: 15, done. Successfully pushed to origin</div>
+            </div>
+        </section>
+
+        <section id="conflicts" class="conflict-section">
+            <h3>🔧 Merge Conflict Resolution</h3>
+            <p>When merge conflicts occur, Git marks the conflicting sections in your files. You'll need to:</p>
+            <ol style="margin-left: 2rem; margin-top: 1rem;">
+                <li>Open the conflicted file and locate the conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;)</li>
+                <li>Decide which changes to keep or combine both versions</li>
+                <li>Remove the conflict markers</li>
+                <li>Stage the resolved file with <code>git add</code></li>
+                <li>Complete the merge with <code>git commit</code></li>
+            </ol>
+        </section>
+
+        <section id="deliverables" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>GitHub Repository</h3>
+                <p>Complete repository with full commit history and branch structure</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📸</div>
+                <h3>Command Screenshots</h3>
+                <p>Visual documentation of git status, log, merge, and branch commands</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>HTML Preview</h3>
+                <p>Browser screenshot showing the final merged HTML output</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚔️</div>
+                <h3>Conflict Resolution</h3>
+                <p>Documentation of merge conflict resolution process if applicable</p>
+            </div>
+        </section>
+
+        <div style="text-align: center; margin: 3rem 0;">
+            <h2 style="margin-bottom: 2rem;">Ready to Start Your Git Journey?</h2>
+            <div class="btn-group">
+                <a href="https://git-scm.com/docs" target="_blank" class="btn">Git Documentation</a>
+                <a href="https://github.com/new" target="_blank" class="btn">Create New Repo</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>Git Workflow Pro</h3>
+            <p>Master version control with professional Git workflows</p>
+            <div class="social-links">
+                <a href="https://github.com" target="_blank">📦</a>
+                <a href="https://git-scm.com" target="_blank">🔀</a>
+                <a href="https://docs.github.com" target="_blank">📚</a>
+            </div>
+            <p style="margin-top: 2rem; opacity: 0.8;">© 2025 Git Workflow Pro. Built with passion for clean version control.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.workflow-card, .feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Terminal typing effect
+        const commands = document.querySelectorAll('.command');
+        commands.forEach((cmd, index) => {
+            cmd.style.opacity = '0';
+            setTimeout(() => {
+                cmd.style.opacity = '1';
+                cmd.style.transition = 'opacity 0.5s ease';
+            }, index * 200);
+        });
+
+        // Add interactive hover effect for branch diagram
+        const branches = document.querySelectorAll('.branch');
+        branches.forEach(branch => {
+            branch.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(-2deg)';
+            });
+            branch.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Add loading animation simulation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+                document.body.style.transition = 'opacity 0.5s ease';
+            }, 100);
+        });
+    </script>
+</body>
+</html><section id="about">
+  <h2>About</h2>
+  <p>This is the about section added on feature/add-about.</p>
+</section>
+Switched to branch 'main'
+Switched to a new branch 'feature/add-about'
+> <section id="about">
+  <h2>About</h2>
+  <p>This is the about section added on feature/add-about.</p>
+</section>
